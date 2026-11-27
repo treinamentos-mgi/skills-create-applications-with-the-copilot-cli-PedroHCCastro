@@ -1,6 +1,6 @@
 const { spawnSync } = require('child_process');
 const path = require('path');
-const { add, subtract, multiply, divide } = require('../calculator');
+const { add, subtract, multiply, divide, modulo, power, squareRoot } = require('../calculator');
 
 describe('addition', () => {
   test('2 + 3 = 5', () => expect(add(2, 3)).toBe(5));
@@ -39,6 +39,47 @@ describe('division', () => {
   });
   test('0 / 0 lança erro', () => {
     expect(() => divide(0, 0)).toThrow('Divisão por zero');
+  });
+});
+
+describe('modulo', () => {
+  test('5 % 2 = 1', () => expect(modulo(5, 2)).toBe(1));
+  test('divisão exata retorna 0', () => expect(modulo(10, 5)).toBe(0));
+  test('dividendo menor que divisor', () => expect(modulo(2, 5)).toBe(2));
+  test('dividendo negativo mantém o sinal', () => expect(modulo(-5, 3)).toBe(-2));
+  test('divisor negativo', () => expect(modulo(5, -3)).toBe(2));
+  test('decimais', () => expect(modulo(5.5, 2)).toBeCloseTo(1.5));
+  test('zero dividido por n', () => expect(modulo(0, 7)).toBe(0));
+  test('módulo por zero gera erro', () => {
+    expect(() => modulo(5, 0)).toThrow('Módulo por zero não é permitido.');
+  });
+});
+
+describe('power', () => {
+  test('2 ^ 3 = 8', () => expect(power(2, 3)).toBe(8));
+  test('expoente zero resulta em 1', () => expect(power(5, 0)).toBe(1));
+  test('0 ^ 0 = 1', () => expect(power(0, 0)).toBe(1));
+  test('expoente um', () => expect(power(7, 1)).toBe(7));
+  test('base negativa com expoente par', () => expect(power(-2, 2)).toBe(4));
+  test('base negativa com expoente ímpar', () => expect(power(-2, 3)).toBe(-8));
+  test('expoente negativo', () => expect(power(2, -2)).toBe(0.25));
+  test('expoente fracionário', () => expect(power(9, 0.5)).toBe(3));
+  test('base zero', () => expect(power(0, 5)).toBe(0));
+});
+
+describe('squareRoot', () => {
+  test('√16 = 4', () => expect(squareRoot(16)).toBe(4));
+  test('√0 = 0', () => expect(squareRoot(0)).toBe(0));
+  test('√1 = 1', () => expect(squareRoot(1)).toBe(1));
+  test('não quadrado perfeito', () => expect(squareRoot(2)).toBeCloseTo(1.41421356));
+  test('decimais', () => expect(squareRoot(0.25)).toBe(0.5));
+  test('número negativo gera erro', () => {
+    expect(() => squareRoot(-1)).toThrow(
+      'Não é possível calcular a raiz quadrada de um número negativo.'
+    );
+  });
+  test('negativo pequeno gera erro', () => {
+    expect(() => squareRoot(-0.0001)).toThrow();
   });
 });
 

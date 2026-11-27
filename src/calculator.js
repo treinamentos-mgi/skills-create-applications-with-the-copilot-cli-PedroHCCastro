@@ -38,6 +38,27 @@ function divide(a, b) {
   return a / b;
 }
 
+// Módulo (modulo) (erro em caso de divisor zero)
+function modulo(a, b) {
+  if (b === 0) {
+    throw new Error('Módulo por zero não é permitido.');
+  }
+  return a % b;
+}
+
+// Potência (power)
+function power(base, exponent) {
+  return Math.pow(base, exponent);
+}
+
+// Raiz quadrada (square root) (erro para números negativos)
+function squareRoot(n) {
+  if (n < 0) {
+    throw new Error('Não é possível calcular a raiz quadrada de um número negativo.');
+  }
+  return Math.sqrt(n);
+}
+
 const operations = { add, subtract, multiply, divide };
 
 function main(args) {
@@ -68,4 +89,4 @@ if (require.main === module) {
   process.exitCode = main(process.argv.slice(2));
 }
 
-module.exports = { add, subtract, multiply, divide };
+module.exports = { add, subtract, multiply, divide, modulo, power, squareRoot };
