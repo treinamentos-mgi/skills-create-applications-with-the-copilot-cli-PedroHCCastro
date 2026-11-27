@@ -65,6 +65,13 @@ describe('power', () => {
   test('expoente negativo', () => expect(power(2, -2)).toBe(0.25));
   test('expoente fracionário', () => expect(power(9, 0.5)).toBe(3));
   test('base zero', () => expect(power(0, 5)).toBe(0));
+  test.each([
+    [-2, 0.5],
+    [0, -1],
+    [10, 1000],
+  ])('potência inválida ou não finita (%s, %s) gera erro', (base, exponent) => {
+    expect(() => power(base, exponent)).toThrow('Não é possível calcular essa potência.');
+  });
 });
 
 describe('squareRoot', () => {
@@ -92,6 +99,9 @@ describe('CLI', () => {
     [['subtract', '10', '4'], '6'],
     [['multiply', '45', '2'], '90'],
     [['divide', '20', '5'], '4'],
+    [['modulo', '5', '2'], '1'],
+    [['power', '2', '3'], '8'],
+    [['squareRoot', '16'], '4'],
   ])('%j imprime %s', (args, expected) => {
     const r = run(...args);
     expect(r.status).toBe(0);
@@ -102,6 +112,17 @@ describe('CLI', () => {
     const r = run('divide', '1', '0');
     expect(r.status).toBe(1);
     expect(r.stderr).toContain('Divisão por zero');
+  });
+
+  test.each([
+    [['modulo', '1', '0'], 'Módulo por zero'],
+    [['power', '-2', '0.5'], 'Não é possível calcular essa potência'],
+    [['power', '0', '-1'], 'Não é possível calcular essa potência'],
+    [['squareRoot', '-1'], 'raiz quadrada de um número negativo'],
+  ])('%j retorna erro', (args, message) => {
+    const r = run(...args);
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain(message);
   });
 
   test('operando inválido retorna erro', () => {
@@ -118,5 +139,14 @@ describe('CLI', () => {
 
   test('número de argumentos incorreto retorna uso', () => {
     expect(run('add', '1').status).toBe(1);
+    expect(run('squareRoot').status).toBe(1);
+    expect(run('squareRoot', '4', '2').status).toBe(1);
+    expect(run('power', '2').status).toBe(1);
+  });
+
+  test('operando inválido da raiz quadrada retorna erro', () => {
+    const r = run('squareRoot', ' ');
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('números válidos');
   });
 });
