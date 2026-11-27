@@ -2,13 +2,16 @@
 /**
  * Calculadora CLI
  *
- * Uso: node src/calculator.js <operação> <a> <b>
+ * Uso: node src/calculator.js <operação> <a> [b]
  *
  * Operações suportadas:
  *   add       - Adição (addition) (a + b)
  *   subtract  - Subtração (subtraction) (a - b)
  *   multiply  - Multiplicação (multiplication) (a * b)
  *   divide    - Divisão (division) (a / b); divisão por zero gera erro
+ *   modulo    - Resto da divisão (a % b); divisor zero gera erro
+ *   power     - Potência (a ^ b); resultado não finito gera erro
+ *   squareRoot - Raiz quadrada de a; número negativo gera erro
  *
  * Exemplos:
  *   node src/calculator.js add 2 3      # 5
@@ -48,7 +51,11 @@ function modulo(a, b) {
 
 // Potência (power)
 function power(base, exponent) {
-  return Math.pow(base, exponent);
+  const result = Math.pow(base, exponent);
+  if (!Number.isFinite(result)) {
+    throw new Error('Não é possível calcular essa potência.');
+  }
+  return result;
 }
 
 // Raiz quadrada (square root) (erro para números negativos)
@@ -59,19 +66,20 @@ function squareRoot(n) {
   return Math.sqrt(n);
 }
 
-const operations = { add, subtract, multiply, divide };
+const operations = { add, subtract, multiply, divide, modulo, power, squareRoot };
 
 function main(args) {
   const [operation, rawA, rawB] = args;
 
-  if (args.length !== 3 || !Object.hasOwn(operations, operation)) {
-    console.error('Uso: node calculator.js <add|subtract|multiply|divide> <a> <b>');
+  if (!Object.hasOwn(operations, operation) || args.length !== (operation === 'squareRoot' ? 2 : 3)) {
+    console.error('Uso: node calculator.js <add|subtract|multiply|divide|modulo|power> <a> <b> ou squareRoot <a>');
     return 1;
   }
 
   const a = Number(rawA);
-  const b = Number(rawB);
-  if (rawA.trim() === '' || rawB.trim() === '' || !Number.isFinite(a) || !Number.isFinite(b)) {
+  const b = operation === 'squareRoot' ? undefined : Number(rawB);
+  if (rawA.trim() === '' || !Number.isFinite(a) ||
+      (operation !== 'squareRoot' && (rawB.trim() === '' || !Number.isFinite(b)))) {
     console.error('Erro: os operandos devem ser números válidos.');
     return 1;
   }
