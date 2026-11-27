@@ -5,32 +5,32 @@
  * Uso: node src/calculator.js <operação> <a> <b>
  *
  * Operações suportadas:
- *   add       - Adição (a + b)
- *   subtract  - Subtração (a - b)
- *   multiply  - Multiplicação (a * b)
- *   divide    - Divisão (a / b); divisão por zero gera erro
+ *   add       - Adição (addition) (a + b)
+ *   subtract  - Subtração (subtraction) (a - b)
+ *   multiply  - Multiplicação (multiplication) (a * b)
+ *   divide    - Divisão (division) (a / b); divisão por zero gera erro
  *
  * Exemplos:
  *   node src/calculator.js add 2 3      # 5
  *   node src/calculator.js divide 10 2  # 5
  */
 
-// Adição
+// Adição (addition)
 function add(a, b) {
   return a + b;
 }
 
-// Subtração
+// Subtração (subtraction)
 function subtract(a, b) {
   return a - b;
 }
 
-// Multiplicação
+// Multiplicação (multiplication)
 function multiply(a, b) {
   return a * b;
 }
 
-// Divisão (erro em caso de divisor zero)
+// Divisão (division) (erro em caso de divisor zero)
 function divide(a, b) {
   if (b === 0) {
     throw new Error('Divisão por zero não é permitida.');
